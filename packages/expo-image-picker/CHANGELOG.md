@@ -4,6 +4,8 @@
 
 ### 🛠 Breaking changes
 
+- Add camera and camera roll permissions on Android. ([#9230](https://github.com/expo/expo/pull/9230) by [@bycedric](https://github.com/bycedric))
+
 ### 🎉 New features
 
 ### 🐛 Bug fixes

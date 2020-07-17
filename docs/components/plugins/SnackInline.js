@@ -70,19 +70,18 @@ export default class SnackInline extends React.Component {
           <input type="hidden" name="name" value={this.props.label || 'Example'} />
           <input type="hidden" name="dependencies" value={this._getDependencies()} />
           <input type="hidden" name="sdkVersion" value={this._getSnackSdkVersion()} />
-          {this.state.ready && this.props.templateId && (
-            // Usage of templateId is discouraged and doesn't support assets
-            <input
-              type="hidden"
-              name="sourceUrl"
-              value={`${this._getExamplesPath()}/${this.props.templateId}.js`}
-            />
-          )}
-          {this.state.ready && !this.props.templateId && (
+          {this.state.ready && (
             <input
               type="hidden"
               name="files"
-              value={JSON.stringify(getSnackFiles(this._getCode(), this.props.files))}
+              value={JSON.stringify(
+                getSnackFiles({
+                  templateId: this.props.templateId,
+                  code: this._getCode(),
+                  files: this.props.files,
+                  baseURL: this._getExamplesPath(),
+                })
+              )}
             />
           )}
           <button className="snack-inline-example-button" disabled={!this.state.ready}>

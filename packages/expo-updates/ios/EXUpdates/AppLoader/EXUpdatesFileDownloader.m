@@ -162,16 +162,19 @@ NSTimeInterval const kEXUpdatesDefaultTimeoutInterval = 60;
   [task resume];
 }
 
-- (void)_setHTTPHeaderFields:(NSMutableURLRequest *)request
+- (void)_setHTTPHeaderFields:(NSMutableURLRequest *)request withConfig:(EXUpdatesConfig *)config
 {
   [request setValue:@"ios" forHTTPHeaderField:@"Expo-Platform"];
   [request setValue:@"1" forHTTPHeaderField:@"Expo-Api-Version"];
   [request setValue:@"BARE" forHTTPHeaderField:@"Expo-Updates-Environment"];
+  
+  for (NSString *key in config.requestHeaders) {
+    [request setValue:config.requestHeaders[key] forHTTPHeaderField:key];
+  }
 }
 
 - (void)_setManifestHTTPHeaderFields:(NSMutableURLRequest *)request withConfig:(EXUpdatesConfig *)config
 {
-  [self _setHTTPHeaderFields:request];
   [request setValue:@"application/expo+json,application/json" forHTTPHeaderField:@"Accept"];
   [request setValue:@"true" forHTTPHeaderField:@"Expo-JSON-Error"];
   [request setValue:@"true" forHTTPHeaderField:@"Expo-Accept-Signature"];
@@ -194,6 +197,8 @@ NSTimeInterval const kEXUpdatesDefaultTimeoutInterval = 60;
     }
     [request setValue:previousFatalError forHTTPHeaderField:@"Expo-Fatal-Error"];
   }
+
+  [self _setHTTPHeaderFields:request withConfig:config];
 }
 
 #pragma mark - NSURLSessionTaskDelegate

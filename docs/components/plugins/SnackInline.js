@@ -16,13 +16,13 @@ export default class SnackInline extends React.Component {
   };
 
   state = {
-    showLink: false,
+    ready: false,
   };
 
   componentDidMount() {
     // render the link only on the client side, because it depends on accessing DOM
     // eslint-disable-next-line react/no-did-mount-set-state
-    this.setState({ showLink: true });
+    this.setState({ ready: true });
   }
 
   // Filter out `latest` and use the concrete latest version instead. We want to
@@ -70,21 +70,22 @@ export default class SnackInline extends React.Component {
           <input type="hidden" name="name" value={this.props.label || 'Example'} />
           <input type="hidden" name="dependencies" value={this._getDependencies()} />
           <input type="hidden" name="sdkVersion" value={this._getSnackSdkVersion()} />
-          {this.props.templateId ? (
-            // Usage of templateId is discouraged and also doesn't support assets
+          {this.state.ready && this.props.templateId && (
+            // Usage of templateId is discouraged and doesn't support assets
             <input
               type="hidden"
               name="sourceUrl"
               value={`${this._getExamplesPath()}/${this.props.templateId}.js`}
             />
-          ) : (
+          )}
+          {this.state.ready && !this.props.templateId && (
             <input
               type="hidden"
               name="files"
               value={JSON.stringify(getSnackFiles(this._getCode(), this.props.files))}
             />
           )}
-          <button className="snack-inline-example-button">
+          <button className="snack-inline-example-button" disabled={!this.state.ready}>
             Try this example on Snack <OpenIcon />
           </button>
         </form>
